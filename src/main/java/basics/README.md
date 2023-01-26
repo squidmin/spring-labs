@@ -25,7 +25,7 @@ public class Vehicle {
 
 ### Autowiring
 
-The process of identifying a dependency, looking for a match, and then populating the dependency is called autowiring. The `@Autowired` annotation tells Spring to find and inject a collaborating bean into another. If more than one bean of the same type is available, Spring throws an error. In the following scenario, two beans of type Operator are detected by Spring:
+The process of identifying a dependency, looking for a match, and then populating the dependency is called autowiring. The `@Autowired` annotation tells Spring to find and inject a collaborating bean into another. If more than one bean of the same type is available, Spring throws an error. In the following scenario, two beans of type `Operator` are detected by Spring:
 
 ```java
 @Component
@@ -91,7 +91,7 @@ class Vehicle {
 }
 ```
 
-IoC container is a generic term. It is not framework specific. Spring offers two implementations of the IoC container:
+**IoC container** is a generic term. It is not framework-specific. Spring offers two implementations of the **IoC container**:
 1. Bean factory
 2. Application context
 
