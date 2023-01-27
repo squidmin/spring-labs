@@ -277,3 +277,175 @@ This will launch a simple *Spring context*. The program successfully runs and pr
 ![13.png](img/13.png)
 
 </details>
+
+
+<details>
+<summary>Dependency</summary>
+
+This section discusses the concept of dependency by setting up a simple example using a Spring Boot application.
+
+The following topics are covered:
+- Tight coupling
+
+In this section, we will build a movie recommender system and add some logic to it.
+
+A recommender system is a system that filters some entities based on the user's history. Recommender systems also rank these items based on user preferences. The system works by taking an input and then finding items similar to that input.
+
+In this section, we will write the basic code for a movie recommender application. The application will take a movie and recommend other movies similar to it. There are various ways in which recommendations can be found. One method is content-based filtering in which item-to-item similarity is used as a basis for finding matches. So, for a movie like Finding Dory, the system will find movies of the same genre, like Happy Feet, Ice Age, Shark Tale, etc.
+
+![14.png](img/14.png)
+
+1. We will create sub-packages inside the `org.squidmin.basics.movierecommendersystem` package to keep the files for every section separate. This is an optional step. Right-click on the base package, mouse-hover **New =>**, and select **Package**. Then provide the name as `section1` and press **Enter** to create the sub-package.
+
+![15.png](img/15.png)
+
+![16.png](img/16.png)
+
+![17.png](img/17.png)
+
+The package for each section contains the `MovieRecommenderSystemApplication` class containing the main method. This file can simply be copied from the `org.squidmin.basics.movierecommendersystem` package to the newly created package.
+
+![18.png](img/18.png)
+
+2. We will create a class named `RecommenderImplementation` in the section1 sub-package.
+
+![19.png](img/19.png)
+
+![20.png](img/20.png)
+
+The `RecommenderImplementation` class will have a method called `recommendMovies()`, which will find similar movies using a content-based filter and then return the results.
+
+The `recommendMovies()` method takes a movie as input so the input parameter is of type String and returns a list of similar movies. Hence, the return type is String[]. Inside the method, we will use a filter to find similar movies and return the results.
+
+```java
+public class RecommenderImplementation {
+    public String[] recommendMovies (String movie) {
+        //use content based filter to find similar movies
+        //return the results
+        return new String[] {"M1", "M2", "M3"};
+    }
+}
+```
+
+We need to hard code the results returned by this method to avoid compile-time errors. The hard coded results will be removed in **step 5**.
+
+Now, we will write the logic of the `recommendMovies()` method in the `RecommenderImplementation` class. As mentioned earlier, we will use a technique called content-based filtering to find movie recommendations. We can implement this technique as a separate class to keep the `recommendMovies()` method independent of the filter implementation.
+
+We will create a new class `ContentBasedFilter` that has a method `getRecommendations()` implementing the logic of the content-based filter. The method returns a list of movies that are relevant to the input, taking into account the user's watch history as well as movies that are similar to the input. We will not make it complex at this step and ignore input arguments like the number of movies to recommend, user's watch history, and the user-movie matrix of ratings.
+
+Our method will have just one input parameter, the movie name, of `String` type. All the steps in finding the relevant movies are performed in this method.
+
+<blockquote>We have hardcoded the results. The <code>getRecommendations()</code> method returns three movies similar to the movie, “<i>Finding Dory</i>”.</blockquote>
+
+```java
+public class ContentBasedFilter {
+    public String[] getRecommendations(String movie) {
+        //logic of content based filter
+        return new String[] {"Happy Feet", "Ice Age", "Shark Tale"};
+    }
+}
+```
+
+Now, we can use an object of the `ContentBasedFilter` class in the `RecommenderImplementation` class as follows:
+
+Since the `getRecommendations()` method is returning a `String[]`, we can remove our hard-coded results and replace them with the actual ones returned by the method.
+
+In the `MovieRecommenderSystemApplication` class, we will create an object of the `RecommenderImplementation` class and use it to find movie recommendations for the movie, *Finding Dory*, as follows:
+
+```java
+import java.util.Arrays;
+
+public class MovieRecommenderSystemApplication {
+    public static void main(String[] args) {
+        RecommenderImplementation recommender = new RecommenderImplementation();    
+        String[] result = recommender.recommendMovies("Finding Dory");
+        System.out.println(Arrays.toString(result));
+    }
+}
+```
+
+To make the output readable, we use the `toString()` method after importing `java.util.Arrays`.
+
+The code in the widget below, when executed, returns a list of movies hard-coded in the `ContentBasedFilter` class.
+
+#### `MovieRecommenderSystem.java`
+
+```java
+package org.squidmin.basics.movierecommendersystem.section1;
+
+import java.util.Arrays;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+
+@SpringBootApplication
+public class MovieRecommenderSystemApplication {
+
+	public static void main(String[] args) {
+		
+		//SpringApplication.run(MovieRecommenderSystemApplication.class, args);
+
+		//create object of RecommenderImplementation class
+		RecommenderImplementation recommender = new RecommenderImplementation();	
+		
+		//call method to get recommendations
+		String[] result = recommender.recommendMovies("Finding Dory");
+		
+		//display results
+		System.out.println(Arrays.toString(result));
+
+	}
+
+}
+```
+
+#### `RecommenderImplementation.java`
+
+```java
+package org.squidmin.basics.movierecommendersystem.lesson1;
+
+public class RecommenderImplementation {
+
+	public String [] recommendMovies (String movie) {
+		
+		//use content based filter to find similar movies
+		
+		ContentBasedFilter filter = new ContentBasedFilter();
+		String[] results = filter.getRecommendations(movie);
+	
+		//return the results
+        //return new String[] {"M1", "M2", "M3"};
+		return results;
+	}
+
+}
+```
+
+#### `ContentBasedFilter.java`
+
+```java
+package org.squidmin.basics.movierecommendersystem.lesson1;
+
+public class ContentBasedFilter {
+	public String[] getRecommendations(String movie) {
+		
+		//implement logic of content based filter
+		
+		//return movie recommendations
+		return new String[] {"Happy Feet", "Ice Age", "Shark Tale"};
+	}
+}
+```
+
+#### Output
+
+```
+[Happy Feet, Ice Age, Shark Tale]
+```
+
+### Tight coupling
+
+
+
+</details>
