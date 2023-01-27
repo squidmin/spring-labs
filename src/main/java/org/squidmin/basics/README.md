@@ -260,7 +260,7 @@ All the dependencies needed to set up the project will be downloaded via the IDE
 
 The `pom.xml` file contains the project metadata information and lists the dependencies.
 
-The Maven Dependencies folder contains the jar files of all the dependencies. If you used Initializr, Spring may have automatically added the dependencies `spring-boot-starter`, `spring-context`, `spring-beans`, and `spring-core`, among other dependencies.
+If using **Eclipse**, The Maven Dependencies folder contains the jar files of all the dependencies. If you used Initializr, Spring may have automatically added the dependencies `spring-boot-starter`, `spring-context`, `spring-beans`, and `spring-core`, among other dependencies.
 
 ![11.png](img/11.png)
 
