@@ -368,7 +368,7 @@ To make the output readable, we use the `toString()` method after importing `jav
 
 The code in the widget below, when executed, returns a list of movies hard-coded in the `ContentBasedFilter` class.
 
-#### `MovieRecommenderSystem.java`
+### `MovieRecommenderSystem.java`
 
 ```java
 package org.squidmin.basics.movierecommendersystem.section1;
@@ -400,7 +400,7 @@ public class MovieRecommenderSystemApplication {
 }
 ```
 
-#### `RecommenderImplementation.java`
+### `RecommenderImplementation.java`
 
 ```java
 package org.squidmin.basics.movierecommendersystem.lesson1;
@@ -422,7 +422,7 @@ public class RecommenderImplementation {
 }
 ```
 
-#### `ContentBasedFilter.java`
+### `ContentBasedFilter.java`
 
 ```java
 package org.squidmin.basics.movierecommendersystem.lesson1;
