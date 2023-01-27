@@ -29,7 +29,7 @@ The process of identifying a dependency, looking for a match, and then populatin
 
 ```java
 @Component
-class Arithmetic(){
+class Arithmetic() {
     @Autowired
     private Operator operator;
     //...
@@ -58,7 +58,6 @@ Traditionally, the class which needed the dependency created an instance of the 
 
 ```java
 class Vehicle {
-  
     private Engine engine = new Engine();
     //...
 }
@@ -68,7 +67,6 @@ Spring takes this responsibility from the class and creates the object itself. T
 
 ```java
 class Vehicle {
- 
     private Engine engine;
     //...
 }
