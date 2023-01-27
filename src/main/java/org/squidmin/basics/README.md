@@ -237,13 +237,13 @@ The highlight of Spring Boot is its auto-configuration feature whereby it automa
 
 This project will use a **Maven** build configuration, with **Spring Boot v2.4.3** at the time of this writing.
 
-Any version which is greater than Spring Boot 2.0 should work for the examples in this project. It is better to avoid `SNAPSHOT` versions as they are alpha or beta versions.
+Any version which is greater than **Spring Boot 2.0** should work for the examples in this project. It is better to avoid `SNAPSHOT` versions as they are alpha or beta versions.
 
-Specify a **GroupId** and **ArtifactId** for the project. This project used the IntelliJ IDEs **New Project** prompts to create these.
+Specify a **GroupId** and **ArtifactId** for the project. This project used the IntelliJ IDE's **New Project** prompts to create these.
 
 ![07.png](img/07.png)
 
-Spring Initializr, by default, creates Spring as one of the dependencies of the project, so we do not need to explicitly specify any dependency. Later in this course, we will create projects with dependencies like Web, AOP, JDBC, JPA, etc.
+Spring Initializr, by default, creates Spring as one of the dependencies of the project, so we do not need to explicitly specify any dependency. Later in this course, we will create projects with dependencies like **Web**, **AOP**, **JDBC**, **JPA**, etc.
 
 ![08.png](img/08.png)
 
@@ -274,7 +274,7 @@ In IntelliJ, an easy way to run the main application is to right-click on the `A
 
 ![12.png](img/12.png)
 
-This will launch a simple Spring context. The program successfully runs and prints some text on the console.
+This will launch a simple *Spring context*. The program successfully runs and prints some text on the console.
 
 ![13.png](img/13.png)
 
