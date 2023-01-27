@@ -446,6 +446,14 @@ public class ContentBasedFilter {
 
 ### Tight coupling
 
+As can be seen, the `ContentBasedFilter` class is a dependency of the `RecommenderImplementation` class. The `RecommenderImplementation` class needs an object of the `ContentBasedFilter` class to perform its task. This is an example of tight coupling.
 
+![21.png](img/21.png)
+
+If we want to use another filter in place of the content-based filter, we will need to change the code in the `RecommenderImplementation` class.
+
+Consider a scenario where we want to use one type of filter in one situation and another type of filter in another situation. Tight coupling makes this difficult to achieve.
+
+In the simple example above, we created two classes which work together, thus creating a dependency. In a typical enterprise application, there are a large number of objects which work together to provide some end result to the user. This results in a lot of dependencies. Spring is a dependency injection framework that makes the process of managing these dependencies easy.
 
 </details>
