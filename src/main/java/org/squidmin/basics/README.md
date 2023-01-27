@@ -272,10 +272,10 @@ The `org.squidmin` package contains the main application, `Application.java`, wh
 
 In IntelliJ, an easy way to run the main application is to right-click on the `Application.java` file in the **Project View** and select **Run 'Application.main()'**.
 
-![img.png](img/12.png)
+![12.png](img/12.png)
 
 This will launch a simple Spring context. The program successfully runs and prints some text on the console.
 
-![img_1.png](img/13.png)
+![13.png](img/13.png)
 
 </details>
