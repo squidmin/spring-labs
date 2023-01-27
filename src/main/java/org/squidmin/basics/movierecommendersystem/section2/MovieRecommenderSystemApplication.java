@@ -1,4 +1,4 @@
-package org.squidmin.basics.movierecommendersystem.section1;
+package org.squidmin.basics.movierecommendersystem.section2;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,14 +8,16 @@ import java.util.Arrays;
 public class MovieRecommenderSystemApplication {
 
     public static void main(String[] args) {
-        // Create an instance of the RecommenderImplementation class.
-        RecommenderImplementation recommender = new RecommenderImplementation();
 
-        // Call the recommendMovies() method to get recommendations.
+        // Passing the name of the filter as a constructor argument.
+        RecommenderImplementation recommender = new RecommenderImplementation(new CollaborativeFilter());
+
+        // Call recommendMovies() method to get recommendations.
         String[] result = recommender.recommendMovies("Finding Dory");
 
-        // Display the results.
+        // Display results.
         System.out.println(Arrays.toString(result));
+
     }
 
 }

@@ -320,8 +320,6 @@ The `recommendMovies()` method takes a movie as input so the input parameter is 
 ```java
 public class RecommenderImplementation {
     public String[] recommendMovies (String movie) {
-        //use content based filter to find similar movies
-        //return the results
         return new String[] {"M1", "M2", "M3"};
     }
 }
@@ -340,7 +338,7 @@ Our method will have just one input parameter, the movie name, of `String` type.
 ```java
 public class ContentBasedFilter {
     public String[] getRecommendations(String movie) {
-        //logic of content based filter
+        // TODO: Logic of content based filter
         return new String[] {"Happy Feet", "Ice Age", "Shark Tale"};
     }
 }
@@ -386,13 +384,13 @@ public class MovieRecommenderSystemApplication {
 		
 		//SpringApplication.run(MovieRecommenderSystemApplication.class, args);
 
-		//create object of RecommenderImplementation class
+		// Create an instance of the RecommenderImplementation class.
 		RecommenderImplementation recommender = new RecommenderImplementation();	
 		
-		//call method to get recommendations
+		// Call the recommendMovies() method to get recommendations.
 		String[] result = recommender.recommendMovies("Finding Dory");
 		
-		//display results
+		// Display the results.
 		System.out.println(Arrays.toString(result));
 
 	}
@@ -403,18 +401,18 @@ public class MovieRecommenderSystemApplication {
 ### `RecommenderImplementation.java`
 
 ```java
-package org.squidmin.basics.movierecommendersystem.lesson1;
+package org.squidmin.basics.movierecommendersystem.section1;
 
 public class RecommenderImplementation {
 
 	public String [] recommendMovies (String movie) {
 		
-		//use content based filter to find similar movies
+		// Use content based filter to find similar movies.
 		
 		ContentBasedFilter filter = new ContentBasedFilter();
 		String[] results = filter.getRecommendations(movie);
 	
-		//return the results
+		// Return the results.
         //return new String[] {"M1", "M2", "M3"};
 		return results;
 	}
@@ -425,7 +423,7 @@ public class RecommenderImplementation {
 ### `ContentBasedFilter.java`
 
 ```java
-package org.squidmin.basics.movierecommendersystem.lesson1;
+package org.squidmin.basics.movierecommendersystem.section1;
 
 public class ContentBasedFilter {
 	public String[] getRecommendations(String movie) {
@@ -455,5 +453,235 @@ If we want to use another filter in place of the content-based filter, we will n
 Consider a scenario where we want to use one type of filter in one situation and another type of filter in another situation. Tight coupling makes this difficult to achieve.
 
 In the simple example above, we created two classes which work together, thus creating a dependency. In a typical enterprise application, there are a large number of objects which work together to provide some end result to the user. This results in a lot of dependencies. Spring is a dependency injection framework that makes the process of managing these dependencies easy.
+
+</details>
+
+
+<details>
+<summary>Decoupling Components</summary>
+
+Discussion of changing tightly coupled code to be loosely coupled.
+
+The following topics are covered:
+- Filter interface
+- Loose coupling
+
+Right now, the `RecommenderImplementation` class is hard coded to use the `ContentBasedFilter` class. If we need to change the way our application recommends movies, we will need to change the code of the `RecommenderImplementation` class.
+
+Say we want to switch from the `ContentBased` filter to `Collaborative` filter and take into account the preferences of users having a similar watch history.
+
+<figure>
+<img src="img/22.png" />
+<figcaption align="center"><b>Collaborative filtering</b></figcaption>
+</figure>
+
+1. We've created a subpackage called **section2** inside the `org.squidmin.basics.movierecommendersystem` package for the code example shown in this lesson.<br/><br/>The package contains the `MovieRecommenderSystemApplication.java`, `RecommenderImplementation.java`, and `ContentBasedFilter.java` files from the previous lesson.
+   <br/><br/>
+2. Changing the type of filter from **content based** to **collaborative** would call for a change in the code of the `RecommenderImplementation` class.<br/><br/>First, let's create a class `CollaborativeFilter`, which, like the `ContentBasedFilter` class, has one method `getRecommendations()` as follows:
+
+```java
+public class CollaborativeFilter {
+    public String[] getRecommendations(String movie) {
+        // TODO: Logic of collaborative filter
+        return new String[] { };
+     }
+ }
+```
+
+This method recommends a list of movies for “*Finding Dory*” based on the logic of the `CollaborativeFilter` class.
+
+3. If we want to switch to the new filter created in the previous step, we will have to change the code in the `RecommenderImplementation` class as follows:
+
+```java
+public class RecommenderImplementation {
+    public String[] recommendMovies(String movie) {
+        CollaborativeFilter filter = new CollaborativeFilter();
+        String[] results = filter.getRecommendations("Finding Dory");
+        return results;
+    }
+}
+```
+
+Here, we have created an object of the `CollaborativeFilter` class instead of the `ContentBasedFilter` class. Every time we want to change the filter implementation, we will have to change the code in the `recommendMovies()` method.
+
+### Filter interface
+
+One way to make the code loosely coupled is by using an interface called `Filter`. An interface contains abstract methods whose implementation is left to the classes using it.
+
+The `Filter` interface will have only one method definition.
+
+```java
+public interface Filter {
+    public String[] getRecommendations(String movie);
+}
+```
+
+Both `ContentBasedFilter` and `CollaborativeFilter` now implement the `Filter` interface.
+
+```java
+public class ContentBasedFilter implements Filter {
+    //...
+}
+```
+
+```java
+public class CollaborativeFilter implements Filter {
+    //...
+}
+```
+
+### Loose coupling
+
+Loose coupling can be achieved by making the `RecommenderImplementation` class use the interface instead of one of its implementations. We will create a constructor for the `RecommenderImplementation` class to initialize the `Filter`.
+
+```java
+public class RecommenderImplementation {
+
+    // Use the Filter interface to select the filter.
+    private Filter filter;
+            
+    public RecommenderImplementation(Filter filter) {
+        super();
+        this.filter = filter;
+    }
+
+    // Use a filter to find recommendations.
+    public String [] recommendMovies (String movie) {
+        //...
+    }
+    
+}
+```
+
+The method `getRecommendations()` now belongs to the interface. To check which implementation of the interface is being used to get movie recommendations, we can print the name of the filter as follows:
+
+```java
+public class RecommenderImplementation {
+    // Use the Filter interface to select the filter.
+    private Filter filter;
+
+    public RecommenderImplementation(Filter filter) {
+        super();
+        this.filter = filter;
+    }
+    
+    public String[] recommendMovies(String movie) {
+        // Print the name of interface implementation being used.
+        System.out.println("Name of the filter in use: " + filter + "\n");
+
+        String[] results = filter.getRecommendations("Finding Dory");
+
+        return results;
+    }
+}
+```
+
+By using the interface instead of an actual implementation, we can dynamically choose which algorithm to use. Our code has now become loosely coupled. In the `MovieRecommenderSystemApplication` file, when we create a `RecommenderImplementation` object, we can pass the name of the filter to use:
+
+#### `MovieRecommenderSystem.java`
+
+```java
+package org.squidmin.basics.movierecommendersystem.section2;
+
+import java.util.Arrays;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MovieRecommenderSystemApplication {
+
+	public static void main(String[] args) {
+
+		// Passing the name of the filter as a constructor argument.
+		RecommenderImplementation recommender = new RecommenderImplementation(new ContentBasedFilter());	
+		
+		// Call recommendMovies() method to get recommendations.
+		String[] result = recommender.recommendMovies("Finding Dory");
+		
+		// Display results.
+		System.out.println(Arrays.toString(result));
+
+	}
+
+}
+```
+
+#### `CollaborativeFilter.java`
+
+```java
+package org.squidmin.basics.movierecommendersystem.section2;
+
+public class CollaborativeFilter implements Filter {
+	public String[] getRecommendations(String movie) {
+		// TODO: Logic of content based filter
+		return new String[] {"Finding Nemo", "Ice Age", "Toy Story"};
+	}
+}
+```
+
+#### `ContentBasedFilter.java`
+
+```java
+package org.squidmin.basics.movierecommendersystem.section2;
+
+public class ContentBasedFilter implements Filter {
+
+	public String[] getRecommendations(String movie) {
+		
+		// TODO: Implement the logic of the content based filter.
+		
+		// Return movie recommendations.
+		return new String[] {"Happy Feet", "Ice Age", "Shark Tale"};
+	}
+
+}
+```
+
+#### `RecommenderImplementation.java`
+
+```java
+package org.squidmin.basics.movierecommendersystem.section2;
+
+public class RecommenderImplementation {
+
+	// Use the Filter interface to select filter.
+	private Filter filter;
+			
+	public RecommenderImplementation(Filter filter) {
+		super();
+		this.filter = filter;
+	}
+
+	// Use a filter to find recommendations.
+	public String[] recommendMovies(String movie) {
+		// Print the name of the interface implementation being used.
+		System.out.println("Name of the filter in use: " + filter + "\n");
+
+		String[] results = filter.getRecommendations("Finding Dory");
+	
+		return results;
+	}
+
+}
+```
+
+#### `Filter.java`
+
+```java
+package org.squidmin.basics.movierecommendersystem.section2;
+
+public interface Filter {
+	public String[] getRecommendations(String movie);
+}
+```
+
+Let's now change the code to use the `CollaborativeFilter` and see the output change.
+
+In this section we made the `RecommenderImplementation` class independent of the filter implementation. The `RecommenderImplementation` now calls methods of the `Filter` interface.
+
+![23.png](img/23.png)
+
+Now `Filter` is a dependency of `RecommenderImplementation`. We still have to create an object of `RecommenderImplementation` and an object of `Filter` and pass the objects to the constructor.
 
 </details>
