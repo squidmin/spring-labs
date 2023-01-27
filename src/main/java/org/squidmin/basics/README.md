@@ -406,7 +406,6 @@ package org.squidmin.basics.movierecommendersystem.section1;
 public class RecommenderImplementation {
 
 	public String [] recommendMovies (String movie) {
-		
 		// Use content based filter to find similar movies.
 		
 		ContentBasedFilter filter = new ContentBasedFilter();
@@ -427,10 +426,9 @@ package org.squidmin.basics.movierecommendersystem.section1;
 
 public class ContentBasedFilter {
 	public String[] getRecommendations(String movie) {
+		// Implement logic of content based filter.
 		
-		//implement logic of content based filter
-		
-		//return movie recommendations
+		// Return movie recommendations.
 		return new String[] {"Happy Feet", "Ice Age", "Shark Tale"};
 	}
 }
@@ -628,7 +626,6 @@ package org.squidmin.basics.movierecommendersystem.section2;
 public class ContentBasedFilter implements Filter {
 
 	public String[] getRecommendations(String movie) {
-		
 		// TODO: Implement the logic of the content based filter.
 		
 		// Return movie recommendations.
