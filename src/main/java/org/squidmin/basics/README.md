@@ -188,6 +188,94 @@ Spring also provides solutions to different enterprise application problems thro
 <details>
 <summary>Reasons for Sustained Popularity</summary>
 
+Discussion of some factors of Spring that led to its widespread adoption and sustained popularity.
 
+The following topics are covered:
+- Flexibility and integration with other frameworks
+- Removes plumbing code
+- Promotes testable code
+- Staying up-to-date
+
+### Flexibility and integration with other frameworks
+
+Spring has a very flexible architecture. Spring modules are not dependent on one another and offer a developer the freedom to pick and choose according to the requirements of the application. Spring projects are designed with very specific purposes in mind.
+
+Spring offers integration with a large number of frameworks. For example, even though Spring offers its own MVC framework, SpringMVC, it also offers integration with other MVC frameworks. Using Spring does not decrease the developer's options.
+
+### Removes plumbing code
+
+Plumbing code not only makes programming longer but also reduces the readability of code. For example, in JDBC programming, a lot of code is required for simple functionality. Connection establishment and exception handling span many lines of code.
+
+Spring removes plumbing code and lets the programmer focus on the application logic. The amount of code written in Spring is negligible. No exception handling code is required because Spring makes all its exceptions unchecked.
+
+### Promotes testable code
+
+Spring framework enables writing testable code. It offers good integration with JUnit and Mockito frameworks, which lets us write unit tests quickly and easily. The core feature of Spring is dependency injection and if it is used properly, writing unit tests for the code becomes very easy.
+
+### Staying up-to-date
+
+Spring is able to stay current and adapt to changes in development. For example, microservices and cloud services have evolved in the last decade. Spring has come up with projects to keep up with the trend, like Spring Boot, which helps with designing microservices.
+
+</details>
+
+
+<details>
+<summary>Creating a project</summary>
+
+There are different ways of creating a Spring project:
+1. Follow the **Spring Initializr** instructions: https://start.spring.io/
+   - Select the dependencies and create a basic project structure with a **Maven** or **Gradle** build specification. This project is available for download in the form of a zip file to be used in a variety of IDEs like **Eclipse**, **IntelliJ**, etc.
+2. Use the **Spring Initializr** plugin for IntelliJ.
+3. If using **Maven** for dependency management and you know the dependencies your project will need: <a href="https://search.maven.org/">Search **Maven Central**</a> for the dependencies your project requires. 
+4. Refer to the `pom.xml` of this project and copy any dependencies your project requires.
+
+The highlight of Spring Boot is its auto-configuration feature whereby it automatically includes all the dependencies of a project based on property files and JAR classpaths. Spring Boot is basically the Spring framework along with embedded servers. Spring Boot removes the need for XML configuration.
+
+![06.png](img/06.png)
+
+<blockquote>Note: Given the simplicity and ease that Spring Boot provides, we will use it to create our first Spring project.</blockquote>
+
+This project will use a **Maven** build configuration, with **Spring Boot v2.4.3** at the time of this writing.
+
+Any version which is greater than Spring Boot 2.0 should work for the examples in this project. It is better to avoid `SNAPSHOT` versions as they are alpha or beta versions.
+
+Specify a **GroupId** and **ArtifactId** for the project. This project used the IntelliJ IDEs **New Project** prompts to create these.
+
+![07.png](img/07.png)
+
+Spring Initializr, by default, creates Spring as one of the dependencies of the project, so we do not need to explicitly specify any dependency. Later in this course, we will create projects with dependencies like Web, AOP, JDBC, JPA, etc.
+
+![08.png](img/08.png)
+
+When the **Generate** button on the form is clicked, the Initializer creates a zip file that is downloaded by the browser. Unzip this file and place it in a folder on the hard drive.
+
+To import this project in Eclipse, choose **File => Import => Existing Maven Projects**. Search for **Maven** in the search bar if the option isn't visible. Browse to the folder on the hard drive where the unzipped Spring Boot project is placed. The `pom.xml` file can be seen. Select the file and click **Finish** to import the project.
+
+![09.png](img/09.png)
+
+All the dependencies needed to set up the project will be downloaded via the IDE. When the import process finishes, the following hierarchy can be seen:
+- `src/main/java` where the Java code will be written. Right now, it contains the project file `<YourAppName>Application.java`
+- `src/main/resources` where the application properties are written.
+- `src/test/java` where the tests will be written.
+
+![10.png](img/10.png)
+
+The `pom.xml` file contains the project metadata information and lists the dependencies.
+
+The Maven Dependencies folder contains the jar files of all the dependencies. If you used Initializr, Spring may have automatically added the dependencies `spring-boot-starter`, `spring-context`, `spring-beans`, and `spring-core`, among other dependencies.
+
+![11.png](img/11.png)
+
+When the project dependencies are finished downloading, they can be found in the **External Libraries** folder, if using **IntelliJ**.
+
+The `org.squidmin` package contains the main application, `Application.java`, which contains the `main` method. The `main` method of the `Application` class can be used to execute the Spring Boot application.
+
+In IntelliJ, an easy way to run the main application is to right-click on the `Application.java` file in the **Project View** and select **Run 'Application.main()'**.
+
+![img.png](img/12.png)
+
+This will launch a simple Spring context. The program successfully runs and prints some text on the console.
+
+![img_1.png](img/13.png)
 
 </details>
