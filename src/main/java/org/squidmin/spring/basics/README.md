@@ -266,7 +266,7 @@ If using **Eclipse**, The Maven Dependencies folder contains the jar files of al
 
 When the project dependencies are finished downloading, they can be found in the **External Libraries** folder, if using **IntelliJ**.
 
-The `org.squidmin` package contains the main application, `Application.java`, which contains the `main` method. The `main` method of the `Application` class can be used to execute the Spring Boot application.
+The `org.squidmin.spring` package contains the main application, `Application.java`, which contains the `main` method. The `main` method of the `Application` class can be used to execute the Spring Boot application.
 
 In IntelliJ, an easy way to run the main application is to right-click on the `Application.java` file in the **Project View** and select **Run 'Application.main()'**.
 
@@ -295,7 +295,7 @@ In this section, we will write the basic code for a movie recommender applicatio
 
 ![14.png](img/14.png)
 
-1. We will create sub-packages inside the `org.squidmin.basics.movierecommendersystem` package to keep the files for every section separate. This is an optional step. Right-click on the base package, mouse-hover **New =>**, and select **Package**. Then provide the name as `section1` and press **Enter** to create the sub-package.
+1. We will create sub-packages inside the `org.squidmin.spring.basics.movierecommendersystem` package to keep the files for every section separate. This is an optional step. Right-click on the base package, mouse-hover **New =>**, and select **Package**. Then provide the name as `section1` and press **Enter** to create the sub-package.
 
 ![15.png](img/15.png)
 
@@ -303,7 +303,7 @@ In this section, we will write the basic code for a movie recommender applicatio
 
 ![17.png](img/17.png)
 
-The package for each section contains the `MovieRecommenderSystemApplication` class containing the main method. This file can simply be copied from the `org.squidmin.basics.movierecommendersystem` package to the newly created package.
+The package for each section contains the `MovieRecommenderSystemApplication` class containing the main method. This file can simply be copied from the `org.squidmin.spring.basics.movierecommendersystem` package to the newly created package.
 
 ![18.png](img/18.png)
 
@@ -369,31 +369,31 @@ The code in the widget below, when executed, returns a list of movies hard-coded
 ### `MovieRecommenderSystem.java`
 
 ```java
-package org.squidmin.basics.movierecommendersystem.section1;
+package org.squidmin.spring.basics.movierecommendersystem.section1;
 
 import java.util.Arrays;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.squidmin.spring.basics.movierecommendersystem.section1.RecommenderImplementation;
 
 
 @SpringBootApplication
 public class MovieRecommenderSystemApplication {
 
-	public static void main(String[] args) {
-		
-		//SpringApplication.run(MovieRecommenderSystemApplication.class, args);
+    public static void main(String[] args) {
 
-		// Create an instance of the RecommenderImplementation class.
-		RecommenderImplementation recommender = new RecommenderImplementation();	
-		
-		// Call the recommendMovies() method to get recommendations.
-		String[] result = recommender.recommendMovies("Finding Dory");
-		
-		// Display the results.
-		System.out.println(Arrays.toString(result));
+        //SpringApplication.run(MovieRecommenderSystemApplication.class, args);
 
-	}
+        // Create an instance of the RecommenderImplementation class.
+        RecommenderImplementation recommender = new RecommenderImplementation();
+
+        // Call the recommendMovies() method to get recommendations.
+        String[] result = recommender.recommendMovies("Finding Dory");
+
+        // Display the results.
+        System.out.println(Arrays.toString(result));
+
+    }
 
 }
 ```
@@ -401,20 +401,22 @@ public class MovieRecommenderSystemApplication {
 ### `RecommenderImplementation.java`
 
 ```java
-package org.squidmin.basics.movierecommendersystem.section1;
+package org.squidmin.spring.basics.movierecommendersystem.section1;
+
+import org.squidmin.spring.basics.movierecommendersystem.section1.ContentBasedFilter;
 
 public class RecommenderImplementation {
 
-	public String [] recommendMovies (String movie) {
-		// Use content based filter to find similar movies.
-		
-		ContentBasedFilter filter = new ContentBasedFilter();
-		String[] results = filter.getRecommendations(movie);
-	
-		// Return the results.
+    public String[] recommendMovies(String movie) {
+        // Use content based filter to find similar movies.
+
+        ContentBasedFilter filter = new ContentBasedFilter();
+        String[] results = filter.getRecommendations(movie);
+
+        // Return the results.
         //return new String[] {"M1", "M2", "M3"};
-		return results;
-	}
+        return results;
+    }
 
 }
 ```
@@ -422,7 +424,7 @@ public class RecommenderImplementation {
 ### `ContentBasedFilter.java`
 
 ```java
-package org.squidmin.basics.movierecommendersystem.section1;
+package org.squidmin.spring.basics.movierecommendersystem.section1;
 
 public class ContentBasedFilter {
 	public String[] getRecommendations(String movie) {
@@ -473,7 +475,7 @@ Say we want to switch from the `ContentBased` filter to `Collaborative` filter a
 <figcaption align="center"><b>Collaborative filtering</b></figcaption>
 </figure>
 
-1. We've created a subpackage called **section2** inside the `org.squidmin.basics.movierecommendersystem` package for the code example shown in this lesson.<br/><br/>The package contains the `MovieRecommenderSystemApplication.java`, `RecommenderImplementation.java`, and `ContentBasedFilter.java` files from the previous lesson.
+1. We've created a subpackage called **section2** inside the `org.squidmin.spring.basics.movierecommendersystem` package for the code example shown in this lesson.<br/><br/>The package contains the `MovieRecommenderSystemApplication.java`, `RecommenderImplementation.java`, and `ContentBasedFilter.java` files from the previous lesson.
    <br/><br/>
 2. Changing the type of filter from **content based** to **collaborative** would call for a change in the code of the `RecommenderImplementation` class.<br/><br/>First, let's create a class `CollaborativeFilter`, which, like the `ContentBasedFilter` class, has one method `getRecommendations()` as follows:
 
@@ -579,28 +581,27 @@ By using the interface instead of an actual implementation, we can dynamically c
 #### `MovieRecommenderSystem.java`
 
 ```java
-package org.squidmin.basics.movierecommendersystem.section2;
+package org.squidmin.spring.basics.movierecommendersystem.section2;
 
 import java.util.Arrays;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.squidmin.spring.basics.movierecommendersystem.section2.ContentBasedFilter;
+import org.squidmin.spring.basics.movierecommendersystem.section2.RecommenderImplementation;
 
 @SpringBootApplication
 public class MovieRecommenderSystemApplication {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
+        // Passing the name of the filter as a constructor argument.
+        RecommenderImplementation recommender = new RecommenderImplementation(new ContentBasedFilter());
 
-		// Passing the name of the filter as a constructor argument.
-		RecommenderImplementation recommender = new RecommenderImplementation(new ContentBasedFilter());	
-		
-		// Call recommendMovies() method to get recommendations.
-		String[] result = recommender.recommendMovies("Finding Dory");
-		
-		// Display results.
-		System.out.println(Arrays.toString(result));
+        // Call recommendMovies() method to get recommendations.
+        String[] result = recommender.recommendMovies("Finding Dory");
 
-	}
+        // Display results.
+        System.out.println(Arrays.toString(result));
+    }
 
 }
 ```
@@ -608,29 +609,33 @@ public class MovieRecommenderSystemApplication {
 #### `CollaborativeFilter.java`
 
 ```java
-package org.squidmin.basics.movierecommendersystem.section2;
+package org.squidmin.spring.basics.movierecommendersystem.section2;
+
+import org.squidmin.spring.basics.movierecommendersystem.section2.Filter;
 
 public class CollaborativeFilter implements Filter {
-	public String[] getRecommendations(String movie) {
-		// TODO: Logic of content based filter
-		return new String[] {"Finding Nemo", "Ice Age", "Toy Story"};
-	}
+    public String[] getRecommendations(String movie) {
+        // TODO: Logic of content based filter
+        return new String[]{"Finding Nemo", "Ice Age", "Toy Story"};
+    }
 }
 ```
 
 #### `ContentBasedFilter.java`
 
 ```java
-package org.squidmin.basics.movierecommendersystem.section2;
+package org.squidmin.spring.basics.movierecommendersystem.section2;
+
+import org.squidmin.spring.basics.movierecommendersystem.section2.Filter;
 
 public class ContentBasedFilter implements Filter {
 
-	public String[] getRecommendations(String movie) {
-		// TODO: Implement the logic of the content based filter.
-		
-		// Return movie recommendations.
-		return new String[] {"Happy Feet", "Ice Age", "Shark Tale"};
-	}
+    public String[] getRecommendations(String movie) {
+        // TODO: Implement the logic of the content based filter.
+
+        // Return movie recommendations.
+        return new String[]{"Happy Feet", "Ice Age", "Shark Tale"};
+    }
 
 }
 ```
@@ -638,27 +643,29 @@ public class ContentBasedFilter implements Filter {
 #### `RecommenderImplementation.java`
 
 ```java
-package org.squidmin.basics.movierecommendersystem.section2;
+package org.squidmin.spring.basics.movierecommendersystem.section2;
+
+import org.squidmin.spring.basics.movierecommendersystem.section2.Filter;
 
 public class RecommenderImplementation {
 
-	// Use the Filter interface to select filter.
-	private Filter filter;
-			
-	public RecommenderImplementation(Filter filter) {
-		super();
-		this.filter = filter;
-	}
+    // Use the Filter interface to select filter.
+    private Filter filter;
 
-	// Use a filter to find recommendations.
-	public String[] recommendMovies(String movie) {
-		// Print the name of the interface implementation being used.
-		System.out.println("Name of the filter in use: " + filter + "\n");
+    public RecommenderImplementation(Filter filter) {
+        super();
+        this.filter = filter;
+    }
 
-		String[] results = filter.getRecommendations("Finding Dory");
-	
-		return results;
-	}
+    // Use a filter to find recommendations.
+    public String[] recommendMovies(String movie) {
+        // Print the name of the interface implementation being used.
+        System.out.println("Name of the filter in use: " + filter + "\n");
+
+        String[] results = filter.getRecommendations("Finding Dory");
+
+        return results;
+    }
 
 }
 ```
@@ -666,7 +673,7 @@ public class RecommenderImplementation {
 #### `Filter.java`
 
 ```java
-package org.squidmin.basics.movierecommendersystem.section2;
+package org.squidmin.spring.basics.movierecommendersystem.section2;
 
 public interface Filter {
 	public String[] getRecommendations(String movie);
@@ -680,5 +687,86 @@ In this section we made the `RecommenderImplementation` class independent of the
 ![23.png](img/23.png)
 
 Now `Filter` is a dependency of `RecommenderImplementation`. We still have to create an object of `RecommenderImplementation` and an object of `Filter` and pass the objects to the constructor.
+
+</details>
+
+
+<details>
+<summary>Managing Beans and Dependencies</summary>
+
+Learn how to use annotations to direct Spring to manage beans and autowire dependencies.
+
+The following topics are covered:
+- `@Component`
+- `@Autowired`
+- `@ComponentScan`
+- `@SpringBootApplication`
+
+So far, we have created objects of RecommenderImplementation class and two classes implementing the Filter interface. We are binding the objects together in the constructor. Our code is now loosely coupled as we are passing the name of the filter to be used as a constructor argument.
+
+Spring automates the above process of creating objects and binding them together. It takes the responsibility of creating instances of classes and binding instances based on their dependencies. The instances or objects that Spring manages are called beans. To manage objects and dependencies, Spring requires information about three things:
+- Beans
+- Dependencies
+- Location of beans
+
+1. For the code example shown in this lesson, we have created a sub-package called `section3` inside the package `org.squidmin.spring.basics.movierecommendersystem`. The package contains `MovieRecommenderSystemApplication.java`, `RecommenderImplementation.java`, `ContentBasedFilter.java`, and `CollaborativeFilter.java` files from the previous section.
+
+### `@Component`
+- If we want Spring to create and manage objects, we can do so by adding the `@Component` annotation at the beginning of the class and importing `org.springframework.stereotype.Component`. For now, we want Spring to manage objects of `RecommenderImplementation` and `ContentBasedFilter` class only, so we will add the `@Component` annotation at two places in the code:
+
+```java
+import org.springframework.stereotype.Component;
+
+@Component
+public class RecommenderImplementation {
+    //...
+}
+```
+
+```java
+import org.springframework.stereotype.Component;
+
+@Component
+public class ContentBasedFilter implements Filter {
+    //...
+}
+```
+
+The Spring container will have two beans, one of type `RecommenderImplementation` and the other of type `ContentBasedFilter`.
+
+![01.png](movierecommendersystem/img/01.png)
+
+### `@Autowired`
+
+- The second thing Spring needs to know is the dependencies of each object. The `@Autowired` annotation is used for this purpose, and we need to import `org.springframework.beans.factory.annotation.Autowired` to be able to use this annotation. In our application, the `ContentBasedFilter` class (which implements the `Filter` interface) is a dependency of the `RecommenderImplementation` class.
+
+```java
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+
+@Component
+public class RecommenderImplementation {
+    @Autowired
+    private Filter filter;
+    // ...
+}
+```
+
+The `@Autowired` annotation tells Spring that `RecommenderImplementation` needs an object of type `Filter`. In other words, `Filter` is a dependency of `RecommenderImplementation`.
+
+![02.png](movierecommendersystem/img/02.png)
+
+### `@Autowired`
+
+- The third thing that Spring requires from the developer, is the location of the beans so that it can find them and autowire the dependencies. The `@ComponentScan` annotation is used for this purpose. This annotation can be used with or without arguments. It tells Spring to scan a specific package and all of its sub-packages. In our case, all the files that contain beans are in the same package, `org.squidmin.spring`, so we want Spring to do a component scan on this package. Since we are using Spring Boot, it uses the `@SpringBootApplication` annotation on the `MovieRecommenderSystemApplication` class. This annotation is equivalent to the following three annotations:
+- `@Configuration`, which declares a class as the source for bean definitions
+- `@EnableAutoConfiguration`, which allows the application to add beans using classpath definitions
+- `@ComponentScan`, which directs Spring to search for components in the path specified
+
+![03.png](movierecommendersystem/img/03.png)
+
+Because of the `@SpringBootApplication` annotation, we do not need to use `@ComponentScan` annotation in our code.
+
+
 
 </details>

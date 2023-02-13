@@ -1,4 +1,4 @@
-package org.squidmin.basics.movierecommendersystem.section1;
+package org.squidmin.spring.basics.movierecommendersystem.section1;
 
 public class RecommenderImplementation {
 
