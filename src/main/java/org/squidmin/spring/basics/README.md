@@ -767,6 +767,77 @@ The `@Autowired` annotation tells Spring that `RecommenderImplementation` needs 
 
 Because of the `@SpringBootApplication` annotation, we do not need to use `@ComponentScan` annotation in our code.
 
+### `@SpringBootApplication`
 
+`@SpringBootApplication` tells Spring to scan all the files in the package where the class with this annotation is present. It also scans any sub-packages of the package where it is placed.
+
+When we use the `@Component`, `@Autowired`, and `@SpringBootApplication` annotations, the following line in our code becomes redundant as it is automatically done by Spring:
+
+`RecommenderImplementation recommender = new RecommenderImplementation(new ContentBasedFilter());`
+
+The beans that Spring creates are managed by the **Application Context**. We can get information about a bean from the **Application Context**. The run method returns the `ApplicationContext`, which can be assigned to a variable `appContext`. Then the `getBean()` method of `ApplicationContext` can be used to get the bean of a particular class. We will create a local variable `recommender` and assign the bean to it as follows:
+
+```java
+public class MovieRecommenderSystemApplication {
+    public static void main(String[] args) {
+        // ApplicationContext manages the beans and dependencies.
+        ApplicationContext appContext = SpringApplication.run(MovieRecommenderSystemApplication.class, args);
+
+        // Use ApplicationContext to find which filter is being used.
+        RecommenderImplementation recommender = appContext.getBean(RecommenderImplementation.class);
+
+        // Call method to get recommendations.
+        String[] result = recommender.recommendMovies("Finding Dory");
+
+        // Display results. 
+        System.out.println(Arrays.toString(result));
+    }
+}
+```
+
+Instead of us having to create an instance of the RecommenderImplementation class, Spring Application Context creates the beans. We can simply pick it up from there and use it to execute the RecommendMovies method.
+
+This might look complex to a beginner, but consider for a moment an application that has hundreds of beans, each having a number of dependencies. The fact that we do not have to explicitly create beans and manually wire in the dependencies makes the job of a developer very easy.
+
+When we run this application (see the `MovieRecommenderSystemApplication.java` class in the `section3` subdirectory), the output shows that the bean being used is `ContentBasedFilter`. If the `@Component` annotation is used on the `CollaborativeFilter` class instead of the `ContentBasedFilter` class, the output will change accordingly.
+
+To understand what goes on in the background, we will change the logging level to `debug`. This can be done by adding the following to the `application.yml` file in `src/main/resources`:
+
+```yml
+Logging:
+  level:
+    org:
+      springframework: debug
+```
+
+After adding the above config to `application.yml`, the terminal will display logs of all the actions that are being performed in the background. A summary of the actions is reproduced below:
+
+- `Loading source class...`
+
+  The package is being searched. Spring starts with a component scan to find anything with `@Component` as well as other annotations.
+
+- *Identified candidate component class*...
+
+  Spring identifies two candidates which have the `@Component` annotation as we only used it in two places in our code.
+
+- *Creating shared instance of singleton bean 'movieRecommenderSystemApplication'*...
+
+- *Creating shared instance of singleton bean 'contentBasedFilter'*
+
+  Spring starts creating instances of the beans. It creates beans that do not have any dependency first.
+
+- *Creating shared instance of singleton bean 'recommenderImplementation'*
+
+  *Autowiring by type from bean name ‘recommenderImplementation’ via constructor to bean named ‘contentBasedFilter'*
+
+  Now Spring can autowire the dependency using the constructor that we have provided and creates the `RecommenderImplementation` bean.
+
+- To better understand these annotations, play around with the code below and see what error messages Spring throws when some of the annotations are missing. The error message can be found at the end of the log.
+
+  If we remove `@Component` from the `ContentBasedFilter` class, Spring will throw an error when trying to autowire the dependency saying it required a bean of type `Filter` that could not be found.
+
+  If we remove `@Component` from the `RecommenderImplementation` class as well, we will get an error when trying to execute the `getBean()` method as no beans exist.
+
+  If we add `@Component` to the `CollaborativeFilter` class, Spring will not know which bean of `Filter` type to autowire. It says, “expected single matching bean but found two”.
 
 </details>
