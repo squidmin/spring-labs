@@ -280,7 +280,7 @@ This will launch a simple *Spring context*. The program successfully runs and pr
 
 
 <details>
-<summary>Dependency</summary>
+<summary>Section 1: Dependency</summary>
 
 This section discusses the concept of dependency by setting up a simple example using a Spring Boot application.
 
@@ -458,7 +458,7 @@ In the simple example above, we created two classes which work together, thus cr
 
 
 <details>
-<summary>Decoupling Components</summary>
+<summary>Section 2: Decoupling Components</summary>
 
 Discussion of changing tightly coupled code to be loosely coupled.
 
@@ -692,7 +692,7 @@ Now `Filter` is a dependency of `RecommenderImplementation`. We still have to cr
 
 
 <details>
-<summary>Managing Beans and Dependencies</summary>
+<summary>Section 3: Managing Beans and Dependencies</summary>
 
 Learn how to use annotations to direct Spring to manage beans and autowire dependencies.
 
@@ -702,24 +702,36 @@ The following topics are covered:
 - `@ComponentScan`
 - `@SpringBootApplication`
 
-So far, we have created objects of RecommenderImplementation class and two classes implementing the Filter interface. We are binding the objects together in the constructor. Our code is now loosely coupled as we are passing the name of the filter to be used as a constructor argument.
+So far, we have created objects of the `RecommenderImplementation` class and two classes implementing the `Filter` interface.
+We are binding the objects together in the constructor.
+Our code is now loosely coupled as we are passing the name of the filter to be used as a constructor argument.
 
-Spring automates the above process of creating objects and binding them together. It takes the responsibility of creating instances of classes and binding instances based on their dependencies. The instances or objects that Spring manages are called beans. To manage objects and dependencies, Spring requires information about three things:
+Spring automates the above process of creating objects and binding them together.
+It takes the responsibility of creating instances of classes and binding instances based on their dependencies.
+The instances or objects that Spring manages are called beans.
+To manage objects and dependencies, Spring requires information about three things:
 - Beans
 - Dependencies
 - Location of beans
 
-1. For the code example shown in this lesson, we have created a sub-package called `section3` inside the package `org.squidmin.spring.basics.movierecommendersystem`. The package contains `MovieRecommenderSystemApplication.java`, `RecommenderImplementation.java`, `ContentBasedFilter.java`, and `CollaborativeFilter.java` files from the previous section.
+1. For the code example shown in this section, we have created a sub-package called `section3` inside the package `org.squidmin.spring.basics.movierecommendersystem`.
+
+   The package contains the following files from the previous section:
+   - `MovieRecommenderSystemApplication.java`
+   - `RecommenderImplementation.java`
+   - `ContentBasedFilter.java`
+   - `CollaborativeFilter.java`
 
 ### `@Component`
-- If we want Spring to create and manage objects, we can do so by adding the `@Component` annotation at the beginning of the class and importing `org.springframework.stereotype.Component`. For now, we want Spring to manage objects of `RecommenderImplementation` and `ContentBasedFilter` class only, so we will add the `@Component` annotation at two places in the code:
+- If we want Spring to create and manage objects, we can do so by adding the `@Component` annotation at the beginning of the class and importing `org.springframework.stereotype.Component`.
+  For now, we want Spring to manage objects of the `RecommenderImplementation` and `ContentBasedFilter` classes only, so we will add the `@Component` annotation at two places in the code:
 
 ```java
 import org.springframework.stereotype.Component;
 
 @Component
 public class RecommenderImplementation {
-    //...
+    // ...
 }
 ```
 
@@ -728,7 +740,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ContentBasedFilter implements Filter {
-    //...
+    // ...
 }
 ```
 
@@ -738,7 +750,9 @@ The Spring container will have two beans, one of type `RecommenderImplementation
 
 ### `@Autowired`
 
-- The second thing Spring needs to know is the dependencies of each object. The `@Autowired` annotation is used for this purpose, and we need to import `org.springframework.beans.factory.annotation.Autowired` to be able to use this annotation. In our application, the `ContentBasedFilter` class (which implements the `Filter` interface) is a dependency of the `RecommenderImplementation` class.
+- The second thing Spring needs to know is the dependencies of each object.
+  The `@Autowired` annotation is used for this purpose, and we need to import `org.springframework.beans.factory.annotation.Autowired` to be able to use this annotation.
+  In our application, the `ContentBasedFilter` class (which implements the `Filter` interface) is a dependency of the `RecommenderImplementation` class.
 
 ```java
 import org.springframework.stereotype.Component;
@@ -755,8 +769,6 @@ public class RecommenderImplementation {
 The `@Autowired` annotation tells Spring that `RecommenderImplementation` needs an object of type `Filter`. In other words, `Filter` is a dependency of `RecommenderImplementation`.
 
 ![02.png](movierecommendersystem/img/02.png)
-
-### `@Autowired`
 
 - The third thing that Spring requires from the developer, is the location of the beans so that it can find them and autowire the dependencies. The `@ComponentScan` annotation is used for this purpose. This annotation can be used with or without arguments. It tells Spring to scan a specific package and all of its sub-packages. In our case, all the files that contain beans are in the same package, `org.squidmin.spring`, so we want Spring to do a component scan on this package. Since we are using Spring Boot, it uses the `@SpringBootApplication` annotation on the `MovieRecommenderSystemApplication` class. This annotation is equivalent to the following three annotations:
 - `@Configuration`, which declares a class as the source for bean definitions
@@ -795,20 +807,27 @@ public class MovieRecommenderSystemApplication {
 }
 ```
 
-Instead of us having to create an instance of the RecommenderImplementation class, Spring Application Context creates the beans. We can simply pick it up from there and use it to execute the RecommendMovies method.
+Instead of us having to create an instance of the `RecommenderImplementation` class, **Spring Application Context** creates the beans.
+We can simply pick it up from there and use it to execute the `recommendMovies` method.
 
 This might look complex to a beginner, but consider for a moment an application that has hundreds of beans, each having a number of dependencies. The fact that we do not have to explicitly create beans and manually wire in the dependencies makes the job of a developer very easy.
 
 When we run this application (see the `MovieRecommenderSystemApplication.java` class in the `section3` subdirectory), the output shows that the bean being used is `ContentBasedFilter`. If the `@Component` annotation is used on the `CollaborativeFilter` class instead of the `ContentBasedFilter` class, the output will change accordingly.
 
-To understand what goes on in the background, we will change the logging level to `debug`. This can be done by adding the following to the `application.yml` file in `src/main/resources`:
+To understand what goes on in the background, you may change the logging level to `debug`.
+This can be done by adding the following to the `application.properties` file in `src/main/resources`:
 
 ```yml
-Logging:
-  level:
-    org:
-      springframework: debug
+Logging.level.org.springframework = debug
 ```
+
+**Logback** has been used for logging in this project.
+
+THe `spring-boot-starter-logging` dependency included with Spring Boot should contain all the dependencies for Logback to work properly.
+Refer to the `logback-spring.xml` file in this project, located at: `/src/main/resources`.
+
+For more info about Logback usage, you can refer to the following resource, among many others freely available on the web:
+- <a href="https://springframework.guru/using-logback-spring-boot/">Baeldung: Using Logback with Spring Boot</a>
 
 After adding the above config to `application.yml`, the terminal will display logs of all the actions that are being performed in the background. A summary of the actions is reproduced below:
 
@@ -816,19 +835,19 @@ After adding the above config to `application.yml`, the terminal will display lo
 
   The package is being searched. Spring starts with a component scan to find anything with `@Component` as well as other annotations.
 
-- *Identified candidate component class*...
+- `Identified candidate component class...`
 
   Spring identifies two candidates which have the `@Component` annotation as we only used it in two places in our code.
 
-- *Creating shared instance of singleton bean 'movieRecommenderSystemApplication'*...
+- `Creating shared instance of singleton bean 'movieRecommenderSystemApplication'...`
 
-- *Creating shared instance of singleton bean 'contentBasedFilter'*
+- `Creating shared instance of singleton bean 'contentBasedFilter'`
 
   Spring starts creating instances of the beans. It creates beans that do not have any dependency first.
 
-- *Creating shared instance of singleton bean 'recommenderImplementation'*
+- `Creating shared instance of singleton bean 'recommenderImplementation'`
 
-  *Autowiring by type from bean name ‘recommenderImplementation’ via constructor to bean named ‘contentBasedFilter'*
+  `Autowiring by type from bean name ‘recommenderImplementation’ via constructor to bean named ‘contentBasedFilter'`
 
   Now Spring can autowire the dependency using the constructor that we have provided and creates the `RecommenderImplementation` bean.
 
@@ -839,5 +858,146 @@ After adding the above config to `application.yml`, the terminal will display lo
   If we remove `@Component` from the `RecommenderImplementation` class as well, we will get an error when trying to execute the `getBean()` method as no beans exist.
 
   If we add `@Component` to the `CollaborativeFilter` class, Spring will not know which bean of `Filter` type to autowire. It says, “expected single matching bean but found two”.
+
+  <br />
+
+  #### `MovieRecommenderSystemApplication.java`
+
+  ```java
+  package org.squidmin.spring.basics.movierecommendersystem.section3;
+  
+  import java.util.Arrays;
+
+  import org.springframework.boot.SpringApplication;
+  import org.springframework.boot.autoconfigure.SpringBootApplication;
+  import org.springframework.context.ApplicationContext;
+  
+  @SpringBootApplication
+  public class MovieRecommenderSystemApplication {
+  
+      public static void main(String[] args) {
+          
+          //ApplicationContext manages the beans and dependencies
+          ApplicationContext appContext = SpringApplication.run(MovieRecommenderSystemApplication.class, args);
+  
+          //use ApplicationContext to find which filter is being used
+          RecommenderImplementation recommender = appContext.getBean(RecommenderImplementation.class);	
+          
+          //call method to get recommendations
+          String[] result = recommender.recommendMovies("Finding Dory");
+          
+          //display results
+          System.out.println(Arrays.toString(result));
+  
+      }
+  
+  }
+  ```
+
+  #### `CollaborativeFilter.java`  
+
+  ```java
+  package org.squidmin.spring.basics.movierecommendersystem.section3;
+  
+  import org.springframework.stereotype.Component;
+
+  @Component
+  public class CollaborativeFilter implements Filter {
+      public String[] getRecommendations(String movie) {
+          // Logic of collaborative filter.
+          return new String[] {"Finding Nemo", "Ice Age", "Toy Story"};
+      }
+  }
+  ```
+  
+  <br />
+
+  #### `ContentBasedFilter.java`
+
+  ```java
+  package org.squidmin.spring.basics.movierecommendersystem.section3;
+  
+  import org.springframework.stereotype.Component;
+  
+  @Component
+  public class ContentBasedFilter implements Filter{
+  
+      // getRecommendations takes a movie as input and returns a list of similar movies.
+      public String[] getRecommendations(String movie) {
+          // Implement logic of the content based filter.
+          
+          // Return the movie recommendations.
+          return new String[] {"Happy Feet", "Ice Age", "Shark Tale"};
+      }
+  
+  }
+  ```
+
+  <br />  
+
+  #### `Filter.java`
+
+  ```java
+  package org.squidmin.spring.basics.movierecommendersystem.section3;
+  
+  public interface Filter {
+      public String[] getRecommendations(String movie);
+  }
+  ```
+  
+  <br />
+
+  #### `RecommenderImplementation.java`
+
+  ```java
+  package org.squidmin.spring.basics.movierecommendersystem.section3;
+    
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.stereotype.Component;
+  
+  @Component
+  public class RecommenderImplementation {
+  
+      // Filter is a dependency of RecommenderImplementation.
+      //@Autowired
+      private Filter filter;
+              
+      public RecommenderImplementation(Filter filter) {
+          super();
+          this.filter = filter;
+      }
+  
+      // Use a filter to find recommendations.
+      public String[] recommendMovies(String movie) {
+          // Print the name of interface implementation being used.
+          System.out.println("\nName of the filter in use: " + filter + "\n");
+          String[] results = filter.getRecommendations("Finding Dory");
+          return results;
+      }
+  
+  }
+  ```
+  
+  <br />
+
+  #### `logback-spring.xml`
+
+  ```xml
+  <?xml version="1.0" encoding="UTF-8"?>
+  <configuration debug="true" scan="true" scanPeriod="10 seconds">
+      <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+      <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+      <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+          <encoder>
+              <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+              <charset>utf8</charset>
+          </encoder>
+      </appender>
+      <root level="DEBUG">
+          <appender-ref ref="CONSOLE" />
+      </root>
+      <logger name="org.springframework" level="INFO"/>
+  </configuration>
+  ```
 
 </details>
