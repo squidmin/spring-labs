@@ -999,5 +999,16 @@ After adding the above config to `application.yml`, the terminal will display lo
       <logger name="org.springframework" level="INFO"/>
   </configuration>
   ```
+  
+<br />
+
+In this section, `MovieRecommenderSystemApplication.java` also contains methods demonstrating how to manually exit a Spring Boot application via programmatic means.
+
+In the `MovieRecommenderSystemApplication.java` class, in the `section3` package, refer to the following methods:
+
+- `exitApplication`
+- `writePID`
+
+These methods instantiate the Spring Boot application in a way that enabled exiting the application programmatically.
 
 </details>
