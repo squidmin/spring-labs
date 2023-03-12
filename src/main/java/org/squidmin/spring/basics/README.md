@@ -1012,3 +1012,302 @@ In the `MovieRecommenderSystemApplication.java` class, in the `section3` package
 These methods instantiate the Spring Boot application in a way that enabled exiting the application programmatically.
 
 </details>
+
+
+<details>
+<summary>Section 4: Autowiring by Type - @Primary</summary>
+
+This section demonstrates how Spring dynamically autowires a dependency in case it finds more than one component of the same type.
+
+The following topics are covered:
+- `NoUniqueBeanDefinitionException`
+- `@Primary` annotation
+
+In the last section, we saw Spring manage two beans of the `RecommenderImplementation` and `ContentBasedFilter` classes for us.
+In this section, we will add another bean and see how Spring can dynamically choose a bean if it finds two matches of the same type.
+
+1. For the code example shown in this lesson, we have created a sub-package called `section4` inside the package `org.squidmin.spring.basics.movierecommendersystem`.
+
+   The package contains 4 classes:
+   - `MovieRecommenderSystemApplication.java`
+   - `RecommenderImplementation.java`
+   - `ContentBasedFilter.java`
+   - `CollaborativeFilter.java`
+
+   from the previous section.
+
+### `NoUniqueBeanDefinitionException`
+
+2. We will add the `@Component` annotation on the `CollaborativeFilter` class to declare it a bean.
+   Now both implementations of the `Filter` interface are beans.
+   Previously, when Spring searched for a dependency to be autowired in the `RecommenderImplementation` object, it only found one bean of matching type.
+   Now, when we run the application, it fails to start.
+
+   <br />
+
+   ![24.png](img/24.png)
+
+   The `NoUniqueBeanDefinitionException` occurs. The error message says: `Required a single bean but two were found`.
+
+   <br />
+
+   #### `MovieRecommenderSystemApplication.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section4;
+   
+   import java.util.Arrays;
+   
+   import org.springframework.boot.SpringApplication;
+   import org.springframework.boot.autoconfigure.SpringBootApplication;
+   import org.springframework.context.ApplicationContext;
+   
+   @SpringBootApplication
+   public class MovieRecommenderSystemApplication {
+   
+       public static void main(String[] args) {
+       
+           // ApplicationContext manages the beans and dependencies.
+           ApplicationContext appContext = SpringApplication.run(MovieRecommenderSystemApplication.class);
+   
+           // Use ApplicationContext to find which filter is being used.
+           RecommenderImplementation recommender = appContext.getBean(RecommenderImplementation.class);
+   
+           // Call method to get recommendations.
+           String[] result = recommender.recommendMovies("Finding Dory");
+   
+           // Display results.
+           System.out.println(Arrays.toString(result));
+   
+       }
+   
+   }
+   ```
+   
+   <br />
+
+   #### `Filter.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section4;
+   
+   public interface Filter {
+       public String[] getRecommendations(String movie);
+   }
+   ```
+   
+   <br />
+
+   #### `CollaborativeFilter.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section4;
+   
+   import org.springframework.stereotype.Component;
+   
+   @Component
+   public class CollaborativeFilter implements Filter {
+   
+       public String[] getRecommendations(String movie) {
+           // Logic of collaborative filter.
+           return new String[] { "Finding Nemo", "Ice Age", "Toy Story" };
+       }
+   
+   }
+   ```
+   
+   <br />
+
+   #### `RecommenderImplementation.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section4;
+   
+   import org.springframework.beans.factory.annotation.Autowired;
+   import org.springframework.stereotype.Component;
+   
+   @Component
+   public class RecommenderImplementation {
+   
+       // Filter is a dependency of RecommenderImplementation.
+       @Autowired
+       private Filter filter;
+   
+       public RecommenderImplementation(Filter filter) {
+           super();
+           this.filter = filter;
+       }
+   
+       // Use a filter to find recommendations.
+       public String[] recommendMovies(String movie) {
+           // Print the name of interface implementation being used.
+           System.out.println("\nName of the filter in use: " + filter + "\n");
+           String[] results = filter.getRecommendations("Finding Dory");
+           return results;
+       }
+   
+   }
+   ```
+   
+   #### `ContentBasedFilter.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section4;
+   
+   import org.springframework.stereotype.Component;
+   
+   @Component
+   public class ContentBasedFilter implements Filter {
+   
+       // getRecommendations takes a movie as input and returns a list of similar movies.
+       public String[] getRecommendations(String movie) {
+           // Implement logic of the content based filter.
+           
+           // Return the movie recommendations.
+           return new String[] { "Happy Feet", "Ice Age", "Shark Tale" };
+       }
+   
+   }
+   ```
+
+   ### `@Primary` annotation
+
+3. One way Spring can choose between two beans of the same type is by giving one bean priority over the other.
+   The `@Primary` annotation is used for making a component the default choice when multiple beans of the same type are found.
+
+   Let's say we want the collaborative filter to take precedence. We will add the `@Primary` annotation on the `CollaborativeFilter` class and import `org.springframework.context.annotation.Primary`.
+   When we run the application now, it uses thr `CollaborativeFilter` as expected.
+
+   ![25.png](img/25.png)
+
+   #### `MovieRecommenderSystemApplication.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section4;
+    
+   import java.util.Arrays;
+    
+   import org.springframework.boot.SpringApplication;
+   import org.springframework.boot.autoconfigure.SpringBootApplication;
+   import org.springframework.context.ApplicationContext;
+        
+   @SpringBootApplication
+   public class MovieRecommenderSystemApplication {
+
+       public static void main(String[] args) {
+        
+           //ApplicationContext manages the beans and dependencies
+           ApplicationContext appContext = SpringApplication.run(MovieRecommenderSystemApplication.class, args);
+
+           //use ApplicationContext to find which filter is being used
+           RecommenderImplementation recommender = appContext.getBean(RecommenderImplementation.class);	
+        
+           //call method to get recommendations
+           String[] result = recommender.recommendMovies("Finding Dory");
+        
+           //display results
+           System.out.println(Arrays.toString(result));
+
+       }
+        
+   }
+   ```
+   
+   <br />
+
+   #### `Filter.java`
+
+    ```java
+    package org.squidmin.spring.basics.movierecommendersystem.section4;
+    
+    public interface Filter {
+      public String[] getRecommendations(String movie);
+    }
+    ```
+   
+   <br />
+
+   #### `CollaborativeFilter.java`
+
+    ```java
+    package org.squidmin.spring.basics.movierecommendersystem.section4;
+    
+    import org.springframework.stereotype.Component;
+    import org.springframework.context.annotation.Primary;
+    
+    @Component
+    @Primary
+    public class CollaborativeFilter implements Filter {
+        public String[] getRecommendations(String movie) {
+            //logic of collaborative filter
+            return new String[] {"Finding Nemo", "Ice Age", "Toy Story"};
+        }
+    }
+    ```
+   
+   <br />
+
+   #### `RecommenderImplementation.java`
+
+    ```java
+    package org.squidmin.spring.basics.movierecommendersystem.section4;
+   
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.stereotype.Component;
+    
+    @Component
+    public class RecommenderImplementation {
+    
+        //Filter is a dependency of RecommenderImplementation
+        @Autowired
+        private Filter filter;
+                
+        public RecommenderImplementation(Filter filter) {
+            super();
+            this.filter = filter;
+        }
+    
+        //use a filter to find recommendations
+        public String [] recommendMovies (String movie) {
+            
+            //print the name of interface implementation being used
+            System.out.println("\nName of the filter in use: " + filter + "\n");
+    
+            String[] results = filter.getRecommendations("Finding Dory");
+        
+            return results;
+        }
+    
+    }
+    ```
+   
+   <br />
+
+   #### `ContentBasedFilter.java`
+
+    ```java
+    package org.squidmin.spring.basics.movierecommendersystem.section4;
+    
+    import org.springframework.stereotype.Component;
+    import org.springframework.context.annotation.Primary;
+    
+    @Component
+    //@Primary
+    public class ContentBasedFilter implements Filter {
+        // getRecommendations takes a movie as input and returns a list of similar movies.
+        public String[] getRecommendations(String movie) {
+            // Implement logic of the content based filter.
+    
+            // Return the movie recommendations.
+            return new String[] {"Happy Feet", "Ice Age", "Shark Tale"};
+        }
+    }
+    ```
+   
+   Using `@Primary` is called _autowiring by type_. We are looking for instances of type `Filter`.
+
+4. If we make both beans primary by adding the `@Primary` annotation to both implementations of the `Filter` interface, we will get an error.
+   This happens because Spring doesn't know which one to inject in the `RecommenderImplementation` object.
+   The error message states: `more than one 'primary' bean found among candidates`.
+
+</details>
