@@ -722,6 +722,7 @@ To manage objects and dependencies, Spring requires information about three thin
    - `ContentBasedFilter.java`
    - `CollaborativeFilter.java`
 
+
 ### `@Component`
 - If we want Spring to create and manage objects, we can do so by adding the `@Component` annotation at the beginning of the class and importing `org.springframework.stereotype.Component`.
   For now, we want Spring to manage objects of the `RecommenderImplementation` and `ContentBasedFilter` classes only, so we will add the `@Component` annotation at two places in the code:
@@ -857,9 +858,8 @@ After adding the above config to `application.yml`, the terminal will display lo
 
   If we remove `@Component` from the `RecommenderImplementation` class as well, we will get an error when trying to execute the `getBean()` method as no beans exist.
 
-  If we add `@Component` to the `CollaborativeFilter` class, Spring will not know which bean of `Filter` type to autowire. It says, “expected single matching bean but found two”.
-
-  <br />
+  If we add `@Component` to the `CollaborativeFilter` class, Spring will not know which bean of `Filter` type to autowire.
+  It says, “expected single matching bean but found two”.
 
   #### `MovieRecommenderSystemApplication.java`
 
@@ -909,8 +909,6 @@ After adding the above config to `application.yml`, the terminal will display lo
       }
   }
   ```
-  
-  <br />
 
   #### `ContentBasedFilter.java`
 
@@ -933,8 +931,6 @@ After adding the above config to `application.yml`, the terminal will display lo
   }
   ```
 
-  <br />  
-
   #### `Filter.java`
 
   ```java
@@ -944,8 +940,6 @@ After adding the above config to `application.yml`, the terminal will display lo
       public String[] getRecommendations(String movie);
   }
   ```
-  
-  <br />
 
   #### `RecommenderImplementation.java`
 
@@ -977,8 +971,6 @@ After adding the above config to `application.yml`, the terminal will display lo
   
   }
   ```
-  
-  <br />
 
   #### `logback-spring.xml`
 
@@ -999,8 +991,6 @@ After adding the above config to `application.yml`, the terminal will display lo
       <logger name="org.springframework" level="INFO"/>
   </configuration>
   ```
-  
-<br />
 
 In this section, `MovieRecommenderSystemApplication.java` also contains methods demonstrating how to manually exit a Spring Boot application via programmatic means.
 
@@ -1036,6 +1026,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
 
    from the previous section.
 
+
 ### `NoUniqueBeanDefinitionException`
 
 2. We will add the `@Component` annotation on the `CollaborativeFilter` class to declare it a bean.
@@ -1043,13 +1034,9 @@ In this section, we will add another bean and see how Spring can dynamically cho
    Previously, when Spring searched for a dependency to be autowired in the `RecommenderImplementation` object, it only found one bean of matching type.
    Now, when we run the application, it fails to start.
 
-   <br />
-
    ![24.png](img/24.png)
 
    The `NoUniqueBeanDefinitionException` occurs. The error message says: `Required a single bean but two were found`.
-
-   <br />
 
    #### `MovieRecommenderSystemApplication.java`
 
@@ -1083,8 +1070,6 @@ In this section, we will add another bean and see how Spring can dynamically cho
    
    }
    ```
-   
-   <br />
 
    #### `Filter.java`
 
@@ -1095,8 +1080,6 @@ In this section, we will add another bean and see how Spring can dynamically cho
        public String[] getRecommendations(String movie);
    }
    ```
-   
-   <br />
 
    #### `CollaborativeFilter.java`
 
@@ -1115,8 +1098,6 @@ In this section, we will add another bean and see how Spring can dynamically cho
    
    }
    ```
-   
-   <br />
 
    #### `RecommenderImplementation.java`
 
@@ -1170,7 +1151,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
    }
    ```
 
-   ### `@Primary` annotation
+### `@Primary` annotation
 
 3. One way Spring can choose between two beans of the same type is by giving one bean priority over the other.
    The `@Primary` annotation is used for making a component the default choice when multiple beans of the same type are found.
@@ -1178,7 +1159,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
    Let's say we want the collaborative filter to take precedence. We will add the `@Primary` annotation on the `CollaborativeFilter` class and import `org.springframework.context.annotation.Primary`.
    When we run the application now, it uses thr `CollaborativeFilter` as expected.
 
-   ![25.png](img/25.png)
+   <img src="img/25.png" />
 
    #### `MovieRecommenderSystemApplication.java`
 
@@ -1212,8 +1193,6 @@ In this section, we will add another bean and see how Spring can dynamically cho
         
    }
    ```
-   
-   <br />
 
    #### `Filter.java`
 
@@ -1221,11 +1200,9 @@ In this section, we will add another bean and see how Spring can dynamically cho
     package org.squidmin.spring.basics.movierecommendersystem.section4;
     
     public interface Filter {
-      public String[] getRecommendations(String movie);
+        public String[] getRecommendations(String movie);
     }
     ```
-   
-   <br />
 
    #### `CollaborativeFilter.java`
 
@@ -1244,8 +1221,6 @@ In this section, we will add another bean and see how Spring can dynamically cho
         }
     }
     ```
-   
-   <br />
 
    #### `RecommenderImplementation.java`
 
@@ -1280,8 +1255,6 @@ In this section, we will add another bean and see how Spring can dynamically cho
     
     }
     ```
-   
-   <br />
 
    #### `ContentBasedFilter.java`
 
@@ -1304,10 +1277,175 @@ In this section, we will add another bean and see how Spring can dynamically cho
     }
     ```
    
-   Using `@Primary` is called _autowiring by type_. We are looking for instances of type `Filter`.
+    Using `@Primary` is called _autowiring by type_. We are looking for instances of type `Filter`.
 
 4. If we make both beans primary by adding the `@Primary` annotation to both implementations of the `Filter` interface, we will get an error.
    This happens because Spring doesn't know which one to inject in the `RecommenderImplementation` object.
    The error message states: `more than one 'primary' bean found among candidates`.
+
+</details>
+
+
+<details>
+<summary>Section 5: Autowiring By Name</summary>
+
+Let's look at another autowiring approach known as autowiring by name and see which approach has higher priority; by name or by type.
+
+In the previous section, we looked at the autowiring by type approach where priority was given to the collaborative filter using the `@Primary` annotation.
+
+Another approach is autowiring by name where we specify the bean that is to be used by name.
+In this approach, while creating an object, the dependency is injected by matching the name of the reference variable to the bean name.
+The developer has to ensure that the variable name is the same as its bean name.
+
+1. For the code example shown in this section, we have created a sub-package called `section5` inside the package `org.squidmin.spring.basics.movierecommendersystem`.
+   The package contains `MovieRecommenderSystemApplication.java`, `RecommenderImplementation.java`, `Filter.java`, `ContentBasedFilter.java`, and `CollaborativeFilter.java` files from the previous lesson.
+2. We will begin by omitting the `@Primary` annotation from the `CollaborativeFilter` class.
+   Now, to let Spring boot know which bean to use, we will change the variable name in the `RecommenderImplementation` class to match the bean name as follows:
+
+   ```java
+   public class RecommenderImplementation {
+       @Autowired
+       private Filter contentBasedFilter;
+   
+       public String[] recommendMovies(String movie) {
+           System.out.println("\nName of the filter in use: " + contentBasedFilter + "\n");
+           String[] results = contentBasedFilter.getRecommendations("Finding Dory");
+           return results;
+       }
+   }
+   ```
+
+   Now when the application is run, it chooses the `ContentBasedFilter` bean for autowiring.
+   When Spring finds two beans of the same type (`Filter`), it determines that the bean to inject is the one whose name matches the bean with the `@Component` annotation.
+   In other words, the variable name (`contentBasedFilter`) matches the bean name (`ContentBasedFilter`).
+
+   ```java
+   public class RecommenderImplementation {
+       @Autowired
+       private Filter contentBasedFilter;
+       // ...
+   }
+   ```
+   
+   ```java
+   @Component
+   public class ContentBasedFilter implements Filter {
+       // ...
+   }
+   ```
+
+   ![img.png](img/25.png)
+
+   ### Code
+
+   #### `Filter.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section5;
+   
+   public interface Filter {
+       public String[] getRecommendations(String movie);
+   }
+   ```
+   
+   #### `CollaborativeFilter.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section5;
+   
+   import org.springframework.stereotype.Component;
+   
+   @Component
+   public class CollaborativeFilter implements Filter {
+       
+       public String[] getRecommendations(String movie) {
+           // Logic of collaborative filter.
+           return new String[] { "Finding Nemo", "Ice Age", "Toy Story" };
+       }
+   
+   }
+   ```
+   
+   #### `ContentBasedFilter.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section5;
+   
+   import org.springframework.stereotype.Component;
+   
+   @Component
+   public class ContentBasedFilter implements Filter {
+       // getRecommendations takes a movie as input and returns a list of similar movies.
+       public String[] getRecommendations(String movie) {
+           // Implement logic of content based filter.
+           // Return movie recommendations.
+           return new String[] { "Happy Feet", "Ice Age", "Shark Tale" };
+       }
+   }
+   ```
+   
+   #### `RecommenderImplementation.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section5;
+   
+   import org.springframework.beans.factory.annotation.Autowired;
+   import org.springframework.stereotype.Component;
+   
+   @Component
+   public class RecommenderImplementation {
+       
+       // Autowiring by name
+       @Autowiring
+       private Filter contentBasedFilter;
+   
+       // Use a filter to find recommendations.
+       public String[] recommendMovies(String movie) {
+           System.out.println("\nName of the filter in use: " + contentBasedFilter + "\n");
+           String[] results = contentBasedFilter.getRecommendations("Finding Dory");
+           return results;
+       }
+       
+   }
+   ```
+
+   #### `MovieRecommenderSystemApplication.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section5;
+   
+   import java.util.Arrays;
+   
+   import org.springframework.boot.SpringApplication;
+   import org.springframework.boot.autoconfigure.SpringBootApplication;
+   import org.springframework.context.ApplicationContext;
+   
+   @SpringBootApplication
+   public class MovieRecommenderSystemApplication {
+   
+       public static void main(String[] args) {
+           ApplicationContext appContext = SpringApplication.run(MovieRecommenderSystemApplication.class);
+           RecommenderImplementation recommender = appContext.getBean(RecommenderImplementation.class);	
+		
+		   String[] result = recommender.recommendMovies("Finding Dory");  // Call method to get recommendations.
+		
+		   System.out.println(Arrays.toString(result));  // Display results.
+       }
+   
+   }
+   ```
+
+3. As an exercise, let's see what happens if the bean name and variable names are different.
+   Let's change the name of the variable to `filter`.
+   When the application is run, autowiring does not take place and, as expected, we get the `NoUniqueBeanDefinitionException`.
+4. We have seen two autowiring approaches so far. To see which autowiring approach takes precedence, we will use the `@Primary` annotation on `ContentBasedFilter` class and use autowiring by name by changing the name of the variable of type `Filter` in the `RecommenderImplementation` class to `collaborativeFilter`.
+   The application chooses the `ContentBasedFilter` bean, showing the `@Primary` has a higher priority.
+   
+   This is because the `@Autowired` annotation tries to resolve dependencies by type first.
+   If it fails to resolve a conflict and finds more than one bean of the same type, then it tries to resolve it by name.
+   
+   The autowiring by name approach is advantageous when we want to use one bean in one situation and another bean in some other situation.
+   Using `@Primary` will always give preference to one bean, which is impractical if we want to use different beans in different scenarios.
+   Autowiring by name ensures that if we have some other component which wants to use another type of bean, it can request Spring by using a different variable name.
 
 </details>
