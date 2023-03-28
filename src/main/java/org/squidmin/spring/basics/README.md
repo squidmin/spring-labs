@@ -218,7 +218,7 @@ Spring is able to stay current and adapt to changes in development. For example,
 
 
 <details>
-<summary>Creating a project</summary>
+<summary>Creating a project with the Spring Initializr GUI</summary>
 
 There are different ways of creating a Spring project:
 1. Follow the **Spring Initializr** instructions: https://start.spring.io/
@@ -275,6 +275,26 @@ In IntelliJ, an easy way to run the main application is to right-click on the `A
 This will launch a simple *Spring context*. The program successfully runs and prints some text on the console.
 
 ![13.png](img/13.png)
+
+</details>
+
+
+<details>
+<summary>Creating a project with Spring Initializr via cURL</summary>
+
+```shell
+curl https://start.spring.io/starter.zip \
+    -d type=maven-project \
+    -d bootVersion=2.7.6 \
+    -d dependencies=web \
+    -d javaVersion=11 \
+    -d name=helloworld \
+    -d artifactId=helloworld \
+    -d baseDir=helloworld \
+    -o helloworld.zip
+unzip helloworld.zip
+cd helloworld
+```
 
 </details>
 
