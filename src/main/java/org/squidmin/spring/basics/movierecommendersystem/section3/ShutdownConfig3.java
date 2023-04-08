@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(basePackages = "org.squidmin.spring.basics.movierecommendersystem.section3")
-public class ShutdownConfig {
+public class ShutdownConfig3 {
 
     @Bean
-    public TerminateBean getTerminateBean() {
-        return new TerminateBean();
+    public TerminateBean3 getTerminateBean() {
+        return new TerminateBean3();
     }
 
 }

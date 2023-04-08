@@ -742,25 +742,33 @@ To manage objects and dependencies, Spring requires information about three thin
    - `ContentBasedFilter.java`
    - `CollaborativeFilter.java`
 
+<blockquote>
+<i>Note that, from `section3` forward, class names will have the section number appended to them to avoid naming conflicts between beans in the application context.</i>
+</blockquote>
+
 
 ### `@Component`
 - If we want Spring to create and manage objects, we can do so by adding the `@Component` annotation at the beginning of the class and importing `org.springframework.stereotype.Component`.
   For now, we want Spring to manage objects of the `RecommenderImplementation` and `ContentBasedFilter` classes only, so we will add the `@Component` annotation at two places in the code:
 
 ```java
+package org.squidmin.spring.basics.movierecommendersystem.section3;
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecommenderImplementation {
+public class RecommenderImplementation3 {
     // ...
 }
 ```
 
 ```java
+package org.squidmin.spring.basics.movierecommendersystem.section3;
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContentBasedFilter implements Filter {
+public class ContentBasedFilter3 implements Filter {
     // ...
 }
 ```
@@ -776,22 +784,31 @@ The Spring container will have two beans, one of type `RecommenderImplementation
   In our application, the `ContentBasedFilter` class (which implements the `Filter` interface) is a dependency of the `RecommenderImplementation` class.
 
 ```java
+package org.squidmin.spring.basics.movierecommendersystem.section3;
+
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
-public class RecommenderImplementation {
+public class RecommenderImplementation3 {
     @Autowired
     private Filter filter;
     // ...
 }
 ```
 
-The `@Autowired` annotation tells Spring that `RecommenderImplementation` needs an object of type `Filter`. In other words, `Filter` is a dependency of `RecommenderImplementation`.
+The `@Autowired` annotation tells Spring that `RecommenderImplementation` needs an object of type `Filter`.
+In other words, `Filter` is a dependency of `RecommenderImplementation`.
 
 ![02.png](movierecommendersystem/img/02.png)
 
-- The third thing that Spring requires from the developer, is the location of the beans so that it can find them and autowire the dependencies. The `@ComponentScan` annotation is used for this purpose. This annotation can be used with or without arguments. It tells Spring to scan a specific package and all of its sub-packages. In our case, all the files that contain beans are in the same package, `org.squidmin.spring`, so we want Spring to do a component scan on this package. Since we are using Spring Boot, it uses the `@SpringBootApplication` annotation on the `MovieRecommenderSystemApplication` class. This annotation is equivalent to the following three annotations:
+- The third thing that Spring requires from the developer, is the location of the beans so that it can find them and autowire the dependencies.
+  The `@ComponentScan` annotation is used for this purpose.
+  This annotation can be used with or without arguments.
+  It tells Spring to scan a specific package and all of its sub-packages.
+  In our case, all the files that contain beans are in the same package, `org.squidmin.spring`, so we want Spring to do a component scan on this package.
+  Since we are using Spring Boot, it uses the `@SpringBootApplication` annotation on the `MovieRecommenderSystemApplication` class.
+  This annotation is equivalent to the following three annotations:
 - `@Configuration`, which declares a class as the source for bean definitions
 - `@EnableAutoConfiguration`, which allows the application to add beans using classpath definitions
 - `@ComponentScan`, which directs Spring to search for components in the path specified
@@ -811,13 +828,15 @@ When we use the `@Component`, `@Autowired`, and `@SpringBootApplication` annotat
 The beans that Spring creates are managed by the **Application Context**. We can get information about a bean from the **Application Context**. The run method returns the `ApplicationContext`, which can be assigned to a variable `appContext`. Then the `getBean()` method of `ApplicationContext` can be used to get the bean of a particular class. We will create a local variable `recommender` and assign the bean to it as follows:
 
 ```java
+package org.squidmin.spring.basics.movierecommendersystem.section3;
+
 public class MovieRecommenderSystemApplication {
     public static void main(String[] args) {
         // ApplicationContext manages the beans and dependencies.
         ApplicationContext appContext = SpringApplication.run(MovieRecommenderSystemApplication.class, args);
 
         // Use ApplicationContext to find which filter is being used.
-        RecommenderImplementation recommender = appContext.getBean(RecommenderImplementation.class);
+        RecommenderImplementation3 recommender = appContext.getBean(RecommenderImplementation3.class);
 
         // Call method to get recommendations.
         String[] result = recommender.recommendMovies("Finding Dory");
@@ -901,7 +920,7 @@ After adding the above config to `application.yml`, the terminal will display lo
           ApplicationContext appContext = SpringApplication.run(MovieRecommenderSystemApplication.class, args);
   
           //use ApplicationContext to find which filter is being used
-          RecommenderImplementation recommender = appContext.getBean(RecommenderImplementation.class);	
+          RecommenderImplementation3 recommender = appContext.getBean(RecommenderImplementation3.class);	
           
           //call method to get recommendations
           String[] result = recommender.recommendMovies("Finding Dory");
@@ -914,7 +933,7 @@ After adding the above config to `application.yml`, the terminal will display lo
   }
   ```
 
-  #### `CollaborativeFilter.java`  
+  #### `CollaborativeFilter3.java`  
 
   ```java
   package org.squidmin.spring.basics.movierecommendersystem.section3;
@@ -922,7 +941,7 @@ After adding the above config to `application.yml`, the terminal will display lo
   import org.springframework.stereotype.Component;
 
   @Component
-  public class CollaborativeFilter implements Filter {
+  public class CollaborativeFilter3 implements Filter {
       public String[] getRecommendations(String movie) {
           // Logic of collaborative filter.
           return new String[] {"Finding Nemo", "Ice Age", "Toy Story"};
@@ -930,7 +949,7 @@ After adding the above config to `application.yml`, the terminal will display lo
   }
   ```
 
-  #### `ContentBasedFilter.java`
+  #### `ContentBasedFilter3.java`
 
   ```java
   package org.squidmin.spring.basics.movierecommendersystem.section3;
@@ -938,7 +957,7 @@ After adding the above config to `application.yml`, the terminal will display lo
   import org.springframework.stereotype.Component;
   
   @Component
-  public class ContentBasedFilter implements Filter{
+  public class ContentBasedFilter3 implements Filter {
   
       // getRecommendations takes a movie as input and returns a list of similar movies.
       public String[] getRecommendations(String movie) {
@@ -961,7 +980,7 @@ After adding the above config to `application.yml`, the terminal will display lo
   }
   ```
 
-  #### `RecommenderImplementation.java`
+  #### `RecommenderImplementation3.java`
 
   ```java
   package org.squidmin.spring.basics.movierecommendersystem.section3;
@@ -970,13 +989,13 @@ After adding the above config to `application.yml`, the terminal will display lo
   import org.springframework.stereotype.Component;
   
   @Component
-  public class RecommenderImplementation {
+  public class RecommenderImplementation3 {
   
       // Filter is a dependency of RecommenderImplementation.
       //@Autowired
       private Filter filter;
               
-      public RecommenderImplementation(Filter filter) {
+      public RecommenderImplementation3(Filter filter) {
           super();
           this.filter = filter;
       }
@@ -1043,20 +1062,31 @@ In this section, we will add another bean and see how Spring can dynamically cho
    - `RecommenderImplementation.java`
    - `ContentBasedFilter.java`
    - `CollaborativeFilter.java`
+   - `shutdown/ShutdownController.java`
+   - `ShutdownConfig.java`
+   - `TerminateBean.java`
 
    from the previous section.
 
 
 ### `NoUniqueBeanDefinitionException`
 
-2. We will add the `@Component` annotation on the `CollaborativeFilter` class to declare it a bean.
+2. We will add the `@Component` annotation on the `CollaborativeFilter` class to declare it as a bean.
    Now both implementations of the `Filter` interface are beans.
-   Previously, when Spring searched for a dependency to be autowired in the `RecommenderImplementation` object, it only found one bean of matching type.
-   Now, when we run the application, it fails to start.
+   Previously, when Spring searched for a dependency to be autowired in the `RecommenderImplementation` object, it only found one bean of the matching type.
+   Now, when the application is ran, it fails to start.
 
    ![24.png](img/24.png)
 
    The `NoUniqueBeanDefinitionException` occurs. The error message says: `Required a single bean but two were found`.
+
+   ```
+   Caused by: org.springframework.context.annotation.ConflictingBeanDefinitionException: Annotation-specified bean name 'contentBasedFilter' for bean class [org.squidmin.spring.basics.movierecommendersystem.section3.ContentBasedFilter3] conflicts with existing, non-compatible bean definition of same name and class [org.squidmin.spring.basics.movierecommendersystem.section4.ContentBasedFilter4]
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.checkCandidate(ClassPathBeanDefinitionScanner.java:349)
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.doScan(ClassPathBeanDefinitionScanner.java:287)
+   ```
+   
+   <br />
 
    #### `MovieRecommenderSystemApplication.java`
 
@@ -1073,19 +1103,17 @@ In this section, we will add another bean and see how Spring can dynamically cho
    public class MovieRecommenderSystemApplication {
    
        public static void main(String[] args) {
-       
            // ApplicationContext manages the beans and dependencies.
            ApplicationContext appContext = SpringApplication.run(MovieRecommenderSystemApplication.class);
    
            // Use ApplicationContext to find which filter is being used.
-           RecommenderImplementation recommender = appContext.getBean(RecommenderImplementation.class);
+           RecommenderImplementation4 recommender = appContext.getBean(RecommenderImplementation4.class);
    
            // Call method to get recommendations.
            String[] result = recommender.recommendMovies("Finding Dory");
    
            // Display results.
            System.out.println(Arrays.toString(result));
-   
        }
    
    }
@@ -1101,7 +1129,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
    }
    ```
 
-   #### `CollaborativeFilter.java`
+   #### `CollaborativeFilter4.java`
 
    ```java
    package org.squidmin.spring.basics.movierecommendersystem.section4;
@@ -1109,7 +1137,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
    import org.springframework.stereotype.Component;
    
    @Component
-   public class CollaborativeFilter implements Filter {
+   public class CollaborativeFilter4 implements Filter {
    
        public String[] getRecommendations(String movie) {
            // Logic of collaborative filter.
@@ -1119,7 +1147,28 @@ In this section, we will add another bean and see how Spring can dynamically cho
    }
    ```
 
-   #### `RecommenderImplementation.java`
+   #### `ContentBasedFilter4.java`
+
+   ```java
+   package org.squidmin.spring.basics.movierecommendersystem.section4;
+   
+   import org.springframework.stereotype.Component;
+   
+   @Component
+   public class ContentBasedFilter4 implements Filter {
+   
+       // getRecommendations takes a movie as input and returns a list of similar movies.
+       public String[] getRecommendations(String movie) {
+           // Implement logic of the content based filter.
+           
+           // Return the movie recommendations.
+           return new String[] { "Happy Feet", "Ice Age", "Shark Tale" };
+       }
+   
+   }
+   ```
+
+   #### `RecommenderImplementation4.java`
 
    ```java
    package org.squidmin.spring.basics.movierecommendersystem.section4;
@@ -1128,13 +1177,13 @@ In this section, we will add another bean and see how Spring can dynamically cho
    import org.springframework.stereotype.Component;
    
    @Component
-   public class RecommenderImplementation {
+   public class RecommenderImplementation4 {
    
        // Filter is a dependency of RecommenderImplementation.
        @Autowired
        private Filter filter;
    
-       public RecommenderImplementation(Filter filter) {
+       public RecommenderImplementation4(Filter filter) {
            super();
            this.filter = filter;
        }
@@ -1149,27 +1198,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
    
    }
    ```
-   
-   #### `ContentBasedFilter.java`
 
-   ```java
-   package org.squidmin.spring.basics.movierecommendersystem.section4;
-   
-   import org.springframework.stereotype.Component;
-   
-   @Component
-   public class ContentBasedFilter implements Filter {
-   
-       // getRecommendations takes a movie as input and returns a list of similar movies.
-       public String[] getRecommendations(String movie) {
-           // Implement logic of the content based filter.
-           
-           // Return the movie recommendations.
-           return new String[] { "Happy Feet", "Ice Age", "Shark Tale" };
-       }
-   
-   }
-   ```
 
 ### `@Primary` annotation
 
@@ -1201,7 +1230,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
            ApplicationContext appContext = SpringApplication.run(MovieRecommenderSystemApplication.class, args);
 
            //use ApplicationContext to find which filter is being used
-           RecommenderImplementation recommender = appContext.getBean(RecommenderImplementation.class);	
+           RecommenderImplementation4 recommender = appContext.getBean(RecommenderImplementation4.class);	
         
            //call method to get recommendations
            String[] result = recommender.recommendMovies("Finding Dory");
@@ -1224,7 +1253,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
     }
     ```
 
-   #### `CollaborativeFilter.java`
+   #### `CollaborativeFilter4.java`
 
     ```java
     package org.squidmin.spring.basics.movierecommendersystem.section4;
@@ -1234,7 +1263,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
     
     @Component
     @Primary
-    public class CollaborativeFilter implements Filter {
+    public class CollaborativeFilter4 implements Filter {
         public String[] getRecommendations(String movie) {
             //logic of collaborative filter
             return new String[] {"Finding Nemo", "Ice Age", "Toy Story"};
@@ -1242,7 +1271,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
     }
     ```
 
-   #### `RecommenderImplementation.java`
+   #### `RecommenderImplementation4.java`
 
     ```java
     package org.squidmin.spring.basics.movierecommendersystem.section4;
@@ -1251,7 +1280,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
     import org.springframework.stereotype.Component;
     
     @Component
-    public class RecommenderImplementation {
+    public class RecommenderImplementation4 {
     
         //Filter is a dependency of RecommenderImplementation
         @Autowired
@@ -1263,7 +1292,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
         }
     
         //use a filter to find recommendations
-        public String [] recommendMovies (String movie) {
+        public String[] recommendMovies(String movie) {
             
             //print the name of interface implementation being used
             System.out.println("\nName of the filter in use: " + filter + "\n");
@@ -1286,7 +1315,7 @@ In this section, we will add another bean and see how Spring can dynamically cho
     
     @Component
     //@Primary
-    public class ContentBasedFilter implements Filter {
+    public class ContentBasedFilter4 implements Filter {
         // getRecommendations takes a movie as input and returns a list of similar movies.
         public String[] getRecommendations(String movie) {
             // Implement logic of the content based filter.
@@ -1323,7 +1352,7 @@ The developer has to ensure that the variable name is the same as its bean name.
    Now, to let Spring boot know which bean to use, we will change the variable name in the `RecommenderImplementation` class to match the bean name as follows:
 
    ```java
-   public class RecommenderImplementation {
+   public class RecommenderImplementation5 {
        @Autowired
        private Filter contentBasedFilter;
    
@@ -1340,7 +1369,7 @@ The developer has to ensure that the variable name is the same as its bean name.
    In other words, the variable name (`contentBasedFilter`) matches the bean name (`ContentBasedFilter`).
 
    ```java
-   public class RecommenderImplementation {
+   public class RecommenderImplementation5 {
        @Autowired
        private Filter contentBasedFilter;
        // ...
@@ -1349,7 +1378,7 @@ The developer has to ensure that the variable name is the same as its bean name.
    
    ```java
    @Component
-   public class ContentBasedFilter implements Filter {
+   public class ContentBasedFilter5 implements Filter {
        // ...
    }
    ```

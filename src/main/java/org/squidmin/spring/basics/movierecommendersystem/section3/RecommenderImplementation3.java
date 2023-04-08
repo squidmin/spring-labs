@@ -6,19 +6,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 @NoArgsConstructor
-public class RecommenderImplementation {
+public class RecommenderImplementation3 {
 
     // Filter is a dependency of RecommenderImplementation.
     @Autowired
     private Filter filter;
 
-    public RecommenderImplementation(Filter filter) {
+    public RecommenderImplementation3(Filter filter) {
         super();
         this.filter = filter;
     }
 
     // Use a filter to find recommendations.
-    public String [] recommendMovies (String movie) {
+    public String[] recommendMovies(String movie) {
 
         // Print the name of interface implementation being used.
         System.out.println("\nName of the filter in use: " + filter + "\n");

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-public class ShutdownController implements ApplicationContextAware {
+public class ShutdownController3 implements ApplicationContextAware {
 
     private ApplicationContext context;
 

@@ -2,7 +2,7 @@ package org.squidmin.spring.basics.movierecommendersystem.section3;
 
 import javax.annotation.PreDestroy;
 
-public class TerminateBean {
+public class TerminateBean3 {
 
     @PreDestroy
     public void onDestroy() throws Exception {

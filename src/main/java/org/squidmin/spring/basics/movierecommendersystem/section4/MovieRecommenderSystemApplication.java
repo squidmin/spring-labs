@@ -1,6 +1,4 @@
-package org.squidmin.spring.basics.movierecommendersystem.section3;
-
-import java.util.Arrays;
+package org.squidmin.spring.basics.movierecommendersystem.section4;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -10,15 +8,23 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication(scanBasePackages = "org.squidmin.spring.basics.movierecommendersystem.section3")
+import java.util.Arrays;
+
+@SpringBootApplication
 @Slf4j
 public class MovieRecommenderSystemApplication {
 
+    @Bean
+    public ContentBasedFilter4 contentBasedFilter() {
+        return new ContentBasedFilter4();
+    }
+
     public static void main(String[] args) {
-//        run(args);
+        run(args);
 //        exitApplication();
-        writePID();
+//        writePID();
     }
 
     private static void run(String[] args) {
@@ -26,7 +32,7 @@ public class MovieRecommenderSystemApplication {
         ApplicationContext ctx = SpringApplication.run(MovieRecommenderSystemApplication.class, args);
 
         // Use ApplicationContext to find which filter is being used.
-        RecommenderImplementation3 recommender = ctx.getBean(RecommenderImplementation3.class);
+        RecommenderImplementation4 recommender = ctx.getBean(RecommenderImplementation4.class);
 
         // Call method to get recommendations.
         String[] result = recommender.recommendMovies("Finding Dory");

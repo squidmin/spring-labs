@@ -1,6 +1,6 @@
 package org.squidmin.spring.basics.movierecommendersystem.section3;
 
-public class CollaborativeFilter implements Filter {
+public class CollaborativeFilter3 implements Filter {
 
     public String[] getRecommendations(String movie) {
         // Logic of collaborative filter.
