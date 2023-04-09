@@ -11,7 +11,7 @@ import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootApplication(scanBasePackages = "org.squidmin.spring.basics.movierecommendersystem.section3")
+@SpringBootApplication
 @Slf4j
 public class MovieRecommenderSystemApplication {
 

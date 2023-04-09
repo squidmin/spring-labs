@@ -5,7 +5,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages = "org.squidmin.spring.basics.movierecommendersystem.section4")
 public class ShutdownConfig4 {
 
     @Bean
